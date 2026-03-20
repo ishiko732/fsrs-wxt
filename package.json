@@ -1,8 +1,8 @@
 {
-  "name": "fsrs-wxt",
+  "name": "fsrs-parameter-optimizer",
   "description": "FSRS parameter optimizer browser extension",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

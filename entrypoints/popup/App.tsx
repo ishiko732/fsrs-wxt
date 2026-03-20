@@ -143,11 +143,12 @@ function App() {
 
       {/* Instructions */}
       {results.length === 0 && !isProcessing && (
-        <div className="rounded-lg border border-[#E4E4E7] p-3">
-          <p className="text-xs font-medium text-[#18181B] mb-1.5">
+        <details className="rounded-lg border border-[#E4E4E7] p-3 group">
+          <summary className="text-xs font-medium text-[#18181B] cursor-pointer list-none flex items-center gap-1">
+            <span className="inline-block transition-transform duration-200 group-open:rotate-90">&#9654;</span>
             How to use
-          </p>
-          <ol className="text-[11px] text-[#71717A] list-decimal list-inside space-y-1">
+          </summary>
+          <ol className="text-[11px] text-[#71717A] list-decimal list-inside space-y-1 mt-1.5">
             <li>
               Download{' '}
               <a
@@ -163,7 +164,7 @@ function App() {
             <li>Configure timezone and settings</li>
             <li>Click &quot;Optimize Parameters&quot;</li>
           </ol>
-        </div>
+        </details>
       )}
     </div>
   )

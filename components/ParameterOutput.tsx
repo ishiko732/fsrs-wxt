@@ -37,7 +37,7 @@ export default function ParameterOutput({
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-1 text-xs text-[#71717A] hover:text-[#18181B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#18181B] focus-visible:ring-offset-1 rounded"
+          className="flex items-center gap-1 text-xs text-[#71717A] hover:text-[#18181B] bg-[#F4F4F5] rounded px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#18181B] focus-visible:ring-offset-1"
           aria-expanded={isExpanded}
         >
           <span

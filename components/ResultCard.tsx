@@ -29,7 +29,7 @@ export default function ResultCard({ result, isProcessing }: ResultCardProps) {
       {/* Completed state */}
       {result.completed && (
         <div>
-          <p className="text-xs font-medium text-[#18181B] mb-1">Completed</p>
+          <p className="text-xs font-medium text-[#22C55E] mb-1">Completed</p>
           <ParameterOutput
             parameters={result.parameters}
             label="View Parameters"

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Screenshot 3 - Features</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(160deg, #f0fdf4 0%, #f8fafc 40%, #eff6ff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #18181b;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #71717a;
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 340px);
+    gap: 24px;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 16px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  .card-icon.green { background: #f0fdf4; }
+  .card-icon.blue { background: #eff6ff; }
+  .card-icon.amber { background: #fffbeb; }
+  .card-icon.purple { background: #faf5ff; }
+  .card-icon.rose { background: #fff1f2; }
+  .card-icon.slate { background: #f1f5f9; }
+
+  .card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #18181b;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 13px;
+    color: #71717a;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <h1>Why FSRS Optimizer?</h1>
+  <p class="subtitle">Everything you need to optimize your spaced repetition, right in the browser</p>
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon green">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 15l5 5L22 8" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>WASM-Powered</h3>
+      <p>Runs the official FSRS-rs algorithm compiled to WebAssembly for native-like performance in your browser</p>
+    </div>
+    <div class="card">
+      <div class="card-icon blue">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="20" height="14" rx="3" stroke="#3b82f6" stroke-width="2.5"/><path d="M4 12h20" stroke="#3b82f6" stroke-width="2.5"/></svg>
+      </div>
+      <h3>100% Offline</h3>
+      <p>All computation happens locally. Your review data never leaves your machine - complete privacy guaranteed</p>
+    </div>
+    <div class="card">
+      <div class="card-icon amber">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="#f59e0b" stroke-width="2.5"/><path d="M14 8v6l4 4" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Fast Results</h3>
+      <p>Get optimized parameters in seconds, not minutes. No server round-trips, no waiting in queues</p>
+    </div>
+    <div class="card">
+      <div class="card-icon purple">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M7 21V11l7-6 7 6v10a1 1 0 01-1 1H8a1 1 0 01-1-1z" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Dual Mode</h3>
+      <p>Generates parameters for both short-term enabled and disabled modes simultaneously</p>
+    </div>
+    <div class="card">
+      <div class="card-icon rose">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4l3 6h7l-5.5 4.5 2 7L14 17l-6.5 4.5 2-7L4 10h7z" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Simple UI</h3>
+      <p>Clean, intuitive interface - just upload your CSV, configure settings, and click optimize</p>
+    </div>
+    <div class="card">
+      <div class="card-icon slate">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="4" stroke="#64748b" stroke-width="2.5"/><path d="M10 10h8M10 14h8M10 18h5" stroke="#64748b" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h3>CSV Import</h3>
+      <p>Drag and drop your Anki review log CSV export - supports files up to 100MB</p>
+    </div>
+  </div>
+</body>
+</html>

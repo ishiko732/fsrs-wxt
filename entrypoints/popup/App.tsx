@@ -57,14 +57,14 @@ function App() {
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-3 space-y-3">
       {/* Header */}
       <div className="flex items-start gap-3">
         <img
           src={popupIconUrl}
           alt=""
           aria-hidden="true"
-          className="h-10 w-10 shrink-0"
+          className="h-8 w-8 shrink-0"
         />
         <div>
           <h1 className="text-base font-semibold text-[#18181B]">

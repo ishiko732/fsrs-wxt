@@ -55,7 +55,7 @@ export default function FileUpload({
     <div>
       <div
         className={`
-          rounded-lg border-2 border-dashed p-6 text-center cursor-pointer transition-colors
+          rounded-lg border-2 border-dashed p-4 text-center cursor-pointer transition-colors
           ${disabled ? 'opacity-50 cursor-not-allowed border-[#E4E4E7]' : ''}
           ${isDragging ? 'border-[#18181B] bg-[#F4F4F5]' : 'border-[#E4E4E7] hover:border-[#A1A1AA]'}
         `}

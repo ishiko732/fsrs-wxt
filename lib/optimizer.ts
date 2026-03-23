@@ -1,6 +1,6 @@
 import { initOptimizer } from '@open-spaced-repetition/binding/dynamic-wasi'
-import wasmUrl from '@open-spaced-repetition/binding-wasm32-wasi/wasm?url'
-import WasiWorker from '@open-spaced-repetition/binding-wasm32-wasi/wasi-worker?worker'
+import wasmUrl from '@open-spaced-repetition/binding-wasm32-wasi/fsrs-binding.wasm32-wasi.wasm?url'
+import WasiWorker from '@open-spaced-repetition/binding-wasm32-wasi/wasi-worker-browser.mjs?worker'
 
 let optimizerPromise: ReturnType<typeof initOptimizer> | null = null
 

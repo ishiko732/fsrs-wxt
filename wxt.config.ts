@@ -6,7 +6,9 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
     name: 'FSRS Parameter Optimizer',
-    description: 'Optimize FSRS parameters from review logs using WASM',
+    short_name: 'FSRS Optimizer',
+    description:
+      'Optimize FSRS parameters from local Anki review logs. All processing runs locally in your browser.',
     content_security_policy: {
       extension_pages:
         "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",

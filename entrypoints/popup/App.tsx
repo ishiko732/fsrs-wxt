@@ -3,7 +3,7 @@ import FileUpload from '@/components/FileUpload'
 import ConfigForm from '@/components/ConfigForm'
 import ResultCard from '@/components/ResultCard'
 import { useTraining } from '@/hooks/useTraining'
-import type { TrainingStats } from '@/types/training'
+import type { ModelVersion, TrainingStats } from '@/types/training'
 import popupIconUrl from '@/assets/popup-icon.svg?inline'
 
 function StatsDisplay({ stats }: { stats: TrainingStats }) {
@@ -35,6 +35,7 @@ function StatsDisplay({ stats }: { stats: TrainingStats }) {
 
 function App() {
   const [csvFile, setCsvFile] = useState<File | null>(null)
+  const [modelVersion, setModelVersion] = useState<ModelVersion>('FSRS-6')
   const [timezone, setTimezone] = useState<string>(() => {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -49,7 +50,13 @@ function App() {
 
   const handleStart = () => {
     if (!csvFile) return
-    startTraining(csvFile, timezone, nextDayStartsAt, numRelearningSteps)
+    startTraining(
+      csvFile,
+      modelVersion,
+      timezone,
+      nextDayStartsAt,
+      numRelearningSteps
+    )
   }
 
   const handleFileSelect = (file: File) => {
@@ -85,6 +92,8 @@ function App() {
 
       {/* Config */}
       <ConfigForm
+        modelVersion={modelVersion}
+        setModelVersion={setModelVersion}
         timezone={timezone}
         setTimezone={setTimezone}
         nextDayStartsAt={nextDayStartsAt}
@@ -126,13 +135,9 @@ function App() {
         <div>
           <h2 className="text-sm font-semibold text-[#18181B] mb-2">Results</h2>
           <div className="grid grid-cols-2 gap-2">
-            {results.map((result) => (
+            {results.map((result, i) => (
               <ResultCard
-                key={
-                  result.enableShortTerm
-                    ? 'short-term-enabled'
-                    : 'short-term-disabled'
-                }
+                key={`${result.modelVersion}-${i}`}
                 result={result}
                 isProcessing={isProcessing}
               />
@@ -161,7 +166,7 @@ function App() {
               </a>
             </li>
             <li>Upload your Anki review log CSV file</li>
-            <li>Configure timezone and settings</li>
+            <li>Choose a model, then configure timezone and settings</li>
             <li>Click &quot;Optimize Parameters&quot;</li>
           </ol>
         </details>

@@ -1,7 +1,10 @@
 import { useId } from 'react'
 import { getSupportedTimezones } from '@/lib/timezone'
+import type { ModelVersion } from '@/types/training'
 
 interface ConfigFormProps {
+  modelVersion: ModelVersion
+  setModelVersion: (modelVersion: ModelVersion) => void
   timezone: string
   setTimezone: (tz: string) => void
   nextDayStartsAt: number
@@ -14,6 +17,8 @@ interface ConfigFormProps {
 const timezones = getSupportedTimezones
 
 export default function ConfigForm({
+  modelVersion,
+  setModelVersion,
   timezone,
   setTimezone,
   nextDayStartsAt,
@@ -22,6 +27,7 @@ export default function ConfigForm({
   setNumRelearningSteps,
   disabled,
 }: ConfigFormProps) {
+  const modelId = useId()
   const tzId = useId()
   const nextDayId = useId()
   const relearningId = useId()
@@ -36,6 +42,22 @@ export default function ConfigForm({
 
   return (
     <div className="space-y-3">
+      <div>
+        <label htmlFor={modelId} className={labelClass}>
+          Model
+        </label>
+        <select
+          id={modelId}
+          value={modelVersion}
+          onChange={(e) => setModelVersion(e.target.value as ModelVersion)}
+          disabled={disabled}
+          className={inputClass}
+        >
+          <option value="FSRS-6">FSRS-6</option>
+          <option value="FSRS-7">FSRS-7</option>
+        </select>
+      </div>
+
       <div>
         <label htmlFor={tzId} className={labelClass}>
           Timezone

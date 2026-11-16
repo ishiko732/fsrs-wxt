@@ -7,14 +7,25 @@ interface ResultCardProps {
   isProcessing: boolean
 }
 
-export default function ResultCard({ result, isProcessing }: ResultCardProps) {
-  const label = result.enableShortTerm
-    ? 'Short-Term Enabled'
-    : 'Short-Term Disabled'
+// Labels come from the trained run, not the current selector value.
+function getOptionLabel(result: OptimizationResult) {
+  if (result.modelVersion === 'FSRS-7') {
+    return result.enableSchedPenalties
+      ? 'Sched Penalties Enabled'
+      : 'Sched Penalties Disabled'
+  }
+  return result.enableShortTerm ? 'Short-Term Enabled' : 'Short-Term Disabled'
+}
 
+export default function ResultCard({ result, isProcessing }: ResultCardProps) {
   return (
     <div className="rounded-lg border border-[#E4E4E7] p-3">
-      <h3 className="text-xs font-semibold text-[#18181B] mb-2">{label}</h3>
+      <p className="text-[10px] font-medium text-[#71717A]">
+        {result.modelVersion}
+      </p>
+      <h3 className="text-xs font-semibold text-[#18181B] mb-2">
+        {getOptionLabel(result)}
+      </h3>
 
       {/* Waiting state */}
       {!result.completed && isProcessing && result.progress === '0/0' && (
@@ -29,7 +40,9 @@ export default function ResultCard({ result, isProcessing }: ResultCardProps) {
       {/* Completed state */}
       {result.completed && (
         <div>
-          <p className="text-xs font-medium text-[#22C55E] mb-1">Completed</p>
+          <p className="text-xs font-medium text-[#22C55E] mb-1">
+            Completed · {result.parameters.length} weights
+          </p>
           <ParameterOutput
             parameters={result.parameters}
             label="View Parameters"

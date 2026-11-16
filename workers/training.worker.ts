@@ -3,7 +3,10 @@
 
 import * as Comlink from 'comlink'
 import { getOptimizer } from '@/lib/optimizer'
-import { getTimezoneOffset, isSupportedTimezone } from '@/lib/timezone'
+import { isSupportedTimezone } from '@/lib/timezone'
+
+// Pinned so output stays 21 FSRS-6 weights; the binding defaults to FSRS-7.
+const modelVersion = 'FSRS-6'
 
 // ── Callbacks passed from main thread via Comlink.proxy() ───────────
 
@@ -36,18 +39,19 @@ const api = {
       buffer,
       nextDayStartsAt,
       timezone,
-      getTimezoneOffset
+      modelVersion
     )
     const parseTime = `${(performance.now() - parseStart).toFixed(2)}ms`
     callbacks.onParseComplete(parseTime, fsrsItems.length)
 
-    // Train sequentially (parallel can cause WASM memory errors)
+    // Train sequentially; the threadless binding blocks this worker while training
     const trainingStart = performance.now()
 
     for (const enableShortTerm of [true, false]) {
       const parameters = await optimizer.computeParameters(fsrsItems, {
         enableShortTerm,
         numRelearningSteps,
+        modelVersion,
         progress: (current: number, total: number) => {
           callbacks.onProgress(enableShortTerm, current, total)
         },

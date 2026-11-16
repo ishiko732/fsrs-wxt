@@ -3,7 +3,7 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ progress }: ProgressBarProps) {
-  const [current, total] = progress.split('/').map(Number)
+  const [current = 0, total = 0] = progress.split('/').map(Number)
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0
 
   return (

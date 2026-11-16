@@ -20,7 +20,7 @@ The current implementation runs training inside a dedicated worker so the popup 
 - TypeScript
 - Tailwind CSS 4
 - Comlink
-- `@open-spaced-repetition/binding` + WASI/WASM
+- `@open-spaced-repetition/binding-wasm32-wasip1` (threadless WASI/WASM)
 
 ## Getting Started
 
@@ -40,6 +40,8 @@ Common commands:
 | `pnpm build:firefox` | Build the Firefox extension |
 | `pnpm zip` | Package the Chrome extension as a zip |
 | `pnpm zip:firefox` | Package the Firefox extension as a zip |
+| `node scripts/smoke.mjs` | Train a synthetic CSV with the WASM binding in Node |
+| `node scripts/browser-smoke.mjs` | Train a synthetic CSV in the built Chromium extension (needs an existing Playwright install; see the script header) |
 
 These scripts follow the standard WXT package setup. Static assets under `public/` are copied directly into the build output.
 
@@ -64,7 +66,8 @@ If you only want to verify the flow quickly, you can use the sample CSV link pro
 ├── hooks/useTraining.ts    # Popup-side training orchestration
 ├── workers/training.worker.ts
 ├── lib/optimizer.ts        # Shared WASM optimizer singleton
-├── lib/timezone.ts         # Timezone validation and offset helpers
+├── lib/timezone.ts         # Timezone list and validation
+├── scripts/                # Smoke tests with a synthetic CSV
 ├── public/icon/            # Extension icon assets
 └── wxt.config.ts           # WXT, manifest, and Vite configuration
 ```
@@ -75,11 +78,12 @@ If you only want to verify the flow quickly, you can use the sample CSV link pro
 
 - The popup calls `training.worker.ts` through Comlink.
 - The worker reuses the optimizer singleton exported by `lib/optimizer.ts` to avoid repeated WASM initialization.
-- Training is intentionally sequential to avoid WASM memory issues caused by parallel execution.
+- The threadless `wasm32-wasip1` binding runs on the training worker itself, without nested WASI workers, `SharedArrayBuffer`, or COOP/COEP headers. Both parameter sets are trained sequentially on that worker.
+- Conversion and training explicitly use `FSRS-6`, so each parameter set has 21 weights.
 
 ### Timezone Handling
 
-- `lib/timezone.ts` computes timezone offsets with `Intl`.
+- The binding resolves IANA timezone offsets per review, including daylight saving transitions.
 - The supported timezone list comes from `Intl.supportedValuesOf('timeZone')`.
 - Timezones are validated before training starts.
 

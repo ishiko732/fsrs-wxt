@@ -2,14 +2,15 @@
 
 A browser extension built with WXT + React for importing local Anki `revlog.csv` files and computing FSRS parameters with a WASM-based optimizer.
 
-The current implementation runs training inside a dedicated worker so the popup UI stays responsive. It also supports timezone selection, `next day starts at`, and `relearning steps` configuration.
+The current implementation runs training inside a dedicated worker so the popup UI stays responsive. It also supports FSRS-6/FSRS-7 model selection, timezone selection, `next day starts at`, and `relearning steps` configuration.
 
 ## Features
 
 - Import Anki review-log CSV files via drag and drop or file picker
 - Validate file type and size locally, with a current limit of 100MB
 - Parse review logs using the selected timezone
-- Output both `Short-Term Enabled` and `Short-Term Disabled` parameter sets
+- Choose the model to train: `FSRS-6` (default, 21 weights) or `FSRS-7` (34 weights)
+- Output a paired comparison per model: FSRS-6 trains `Short-Term Enabled` and `Short-Term Disabled`; FSRS-7 keeps short-term enabled and trains `Sched Penalties Enabled` and `Sched Penalties Disabled`
 - Show parse time, item count, training progress, and final results during execution
 - Include custom extension icon assets under `public/icon/`
 
@@ -40,8 +41,8 @@ Common commands:
 | `pnpm build:firefox` | Build the Firefox extension |
 | `pnpm zip` | Package the Chrome extension as a zip |
 | `pnpm zip:firefox` | Package the Firefox extension as a zip |
-| `node scripts/smoke.mjs` | Train a synthetic CSV with the WASM binding in Node |
-| `node scripts/browser-smoke.mjs` | Train a synthetic CSV in the built Chromium extension (needs an existing Playwright install; see the script header) |
+| `node scripts/smoke.mjs` | Train a synthetic CSV with the WASM binding in Node, for both models and both options per model |
+| `node scripts/browser-smoke.mjs` | Train a synthetic CSV with FSRS-6, FSRS-7, then FSRS-6 in the built Chromium extension (needs an existing Playwright install; see the script header) |
 
 These scripts follow the standard WXT package setup. Static assets under `public/` are copied directly into the build output.
 
@@ -50,9 +51,9 @@ These scripts follow the standard WXT package setup. Static assets under `public
 1. Export `revlog.csv` from Anki.
 2. Open the extension popup.
 3. Upload the CSV file.
-4. Configure the timezone, `Next Day Starts At`, and `Relearning Steps`.
+4. Choose the model, then configure the timezone, `Next Day Starts At`, and `Relearning Steps`.
 5. Click `Optimize Parameters`.
-6. Review the two generated FSRS parameter sets.
+6. Review the two generated FSRS parameter sets. Each result keeps the model and option it was trained with, even if the model selector changes afterwards.
 
 If you only want to verify the flow quickly, you can use the sample CSV link provided in the UI.
 
@@ -79,7 +80,8 @@ If you only want to verify the flow quickly, you can use the sample CSV link pro
 - The popup calls `training.worker.ts` through Comlink.
 - The worker reuses the optimizer singleton exported by `lib/optimizer.ts` to avoid repeated WASM initialization.
 - The threadless `wasm32-wasip1` binding runs on the training worker itself, without nested WASI workers, `SharedArrayBuffer`, or COOP/COEP headers. Both parameter sets are trained sequentially on that worker.
-- Conversion and training explicitly use `FSRS-6`, so each parameter set has 21 weights.
+- CSV conversion and training use the same selected `modelVersion`. FSRS-6 returns 21 weights per set and FSRS-7 returns 34.
+- FSRS-6 compares `enableShortTerm: true/false`. FSRS-7 keeps `enableShortTerm: true` and compares `enableSchedPenalties: true/false`; the penalties only change the FSRS-7 training loss, not the scheduling formulas.
 
 ### Timezone Handling
 

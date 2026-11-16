@@ -35,23 +35,40 @@ if (import.meta.main) {
   assert.equal(text.trim().split('\n').length, 2401)
   const csv = new TextEncoder().encode(text)
 
-  const items = binding.convertCsvToFsrsItems(csv, 4, 'Asia/Shanghai', 'FSRS-6')
-  assert.equal(items.length, 2100)
+  // Same paired runs as types/training.ts trainingRuns.
+  const runsByModel = {
+    'FSRS-6': [{ enableShortTerm: true }, { enableShortTerm: false }],
+    'FSRS-7': [
+      { enableShortTerm: true, enableSchedPenalties: true },
+      { enableShortTerm: true, enableSchedPenalties: false },
+    ],
+  }
+  const weightCounts = { 'FSRS-6': 21, 'FSRS-7': 34 }
 
-  for (const enableShortTerm of [true, false]) {
-    let progressCalls = 0
-    const parameters = await binding.computeParameters(items, {
-      enableShortTerm,
-      numRelearningSteps: 1,
-      modelVersion: 'FSRS-6',
-      progress: () => {
-        progressCalls++
-      },
-    })
-    assert.equal(parameters.length, 21, `enableShortTerm=${enableShortTerm}`)
-    assert.ok(parameters.every(Number.isFinite))
-    assert.ok(progressCalls > 0)
-    console.log(`enableShortTerm=${enableShortTerm}: ${JSON.stringify(parameters)}`)
+  for (const [modelVersion, runs] of Object.entries(runsByModel)) {
+    const items = binding.convertCsvToFsrsItems(csv, 4, 'Asia/Shanghai', modelVersion)
+    assert.equal(items.length, 2100, modelVersion)
+
+    const pair = []
+    for (const run of runs) {
+      const label = `${modelVersion} ${JSON.stringify(run)}`
+      let progressCalls = 0
+      const parameters = await binding.computeParameters(items, {
+        ...run,
+        modelVersion,
+        numRelearningSteps: 1,
+        progress: () => {
+          progressCalls++
+        },
+      })
+      assert.equal(parameters.length, weightCounts[modelVersion], label)
+      assert.ok(parameters.every(Number.isFinite), label)
+      assert.ok(progressCalls > 0, label)
+      console.log(`${label}: ${JSON.stringify(parameters)}`)
+      pair.push(parameters)
+    }
+    // The toggled option must reach training.
+    assert.notDeepEqual(pair[0], pair[1], modelVersion)
   }
 
   // The removed JS offset callback is no longer accepted as the 4th argument.
@@ -59,5 +76,5 @@ if (import.meta.main) {
     binding.convertCsvToFsrsItems(csv, 4, 'Asia/Shanghai', () => 0)
   )
 
-  console.log('smoke ok: 2100 items, 21 FSRS-6 weights per mode')
+  console.log('smoke ok: 2100 items, 21 FSRS-6 / 34 FSRS-7 weights per run')
 }

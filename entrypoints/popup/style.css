@@ -11,6 +11,12 @@ body {
   background-color: #ffffff;
 }
 
+html[data-standalone="true"] body {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
 #root {
   width: 100%;
 }

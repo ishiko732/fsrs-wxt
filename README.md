@@ -49,7 +49,7 @@ These scripts follow the standard WXT package setup. Static assets under `public
 ## Usage
 
 1. Export `revlog.csv` from Anki.
-2. Open the extension popup.
+2. Open the extension popup (or use the top-right `Open in standalone window` button to keep the window open across file dialogs and app switches).
 3. Upload the CSV file.
 4. Choose the model, then configure the timezone, `Next Day Starts At`, and `Relearning Steps`.
 5. Click `Optimize Parameters`.

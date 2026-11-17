@@ -54,6 +54,29 @@ try {
   await page.goto(`chrome-extension://${extensionId}/popup.html`)
   assert.equal(await page.evaluate(() => crossOriginIsolated), false)
 
+  const standaloneButton = page.getByRole('button', {
+    name: 'Open in standalone window',
+  })
+  const standaloneOpened = context.waitForEvent('page')
+  await standaloneButton.click()
+  const standalonePage = await standaloneOpened
+  await standalonePage.waitForLoadState('domcontentloaded')
+  assert.equal(
+    standalonePage.url(),
+    `chrome-extension://${extensionId}/popup.html?standalone=1`
+  )
+  assert.equal(
+    await standalonePage
+      .getByRole('button', { name: 'Open in standalone window' })
+      .count(),
+    0
+  )
+  const pageCountBefore = context.pages().length
+  await standaloneButton.click()
+  await page.waitForTimeout(200)
+  assert.equal(context.pages().length, pageCountBefore, 'standalone window reused')
+  await standalonePage.close()
+
   const model = page.getByLabel('Model', { exact: true })
   assert.equal(await model.inputValue(), 'FSRS-6', 'default model')
   await page.getByLabel('Timezone').selectOption('Asia/Shanghai')
